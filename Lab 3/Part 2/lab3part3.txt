@@ -1,0 +1,156 @@
+									#DECLARE
+.data
+#type in numbers | search the array | 1st loop puts numbers in | 2nd loop finds the index of the variable, and the quanity of occurences
+
+#DEFINE EACH STRING AND VARIABLE								
+	str1:	.ascii	"Type in 10 elements: "
+	#NULL1 separates each string... therefore it would append each other
+	NULL1: 	.word 0
+	str2:	.ascii	"Type in Occurence Value: "
+	NULL2: 	.word 0
+	str3:	.ascii "Occurence indexes are:"
+	NULL3:	.word 0
+	str4:	.ascii "Number of occurences found:"
+	NULL4:	.word 0
+	str5:	.ascii "\n"
+	x:	  	.word 0 
+	
+.text								
+#----------------------------------------------#INSTRUCTIONS FOLLOW THIS LINE
+
+
+#ORI : BITWISE IMMEDIATE VALUE THAT STORES RESULT INTO REGISTER
+#LA	 : LOADS INTO REGISTER
+#SLL : IS USED IN THIS PROGRAM TO SHIFT THE X IN THE ARRAY[]
+
+main:								
+
+#(MAIN/STRING ARGS[])
+
+	#PRINT "STRING 1" #"TYPE IN 4 ELEMENTS"
+	la 	$a0, str1
+	ori	$v0, $0, 4
+	syscall
+	
+	#PRINT "STRING 5" : "END LINE"
+	la $a0, str5
+	ori $v0, $0, 4
+	syscall
+	
+	#LOAD ADDRESS OF X
+	la $s1, x
+
+	#DEFINE VARIABLE TO INCREMENT FOR LOOP
+	ori $s0, $0, 0
+	
+# (LOOP 1)
+Loop1:
+
+	#READ FROM KEYBOARD
+	ori $v0, $0, 5		
+	syscall
+	
+	#STORE NUMBER INTO ARRAY
+	sll $t0, $s0, 2		#SHIFT X LEFT
+	add $t0, $t0, $s1	#ADD INTO ARRAY
+	sw  $v0, 0($t0)		#STORE REGISTER INTO ADDRESS with GIVEN OFFSET
+	
+	#CHECK CONDITION AND MAKE BRANCH
+	slt $t0, $s0, 9		#x is less than 9 (X<9)
+	bne $t0, 1, goon1	#if two registers are not equal
+	nop					#stops bne clock cycle
+	addi $s0, $s0, 1
+	j Loop1
+
+	goon1:
+		#PRINT STRING 2 : TYPE IN OCCURENCES
+		la $a0, str2
+		ori $v0, $0, 4
+		syscall
+		
+		#PRINT STRING 5 : END LINE
+		la $a0, str5
+		ori $v0, $0, 4
+		syscall
+		
+		#READ OCCURRENCE VALUE FROM KEYBOARD
+		ori $v0, $0, 5
+		syscall
+		addu $s3, $0, $v0
+	
+		#PRINT OUT STRING 3 : OCCURENCES INDEX(S)
+		la $a0, str3
+		ori $v0, $0, 4
+		syscall
+		
+		#PRINT STRING 5 : END LINE
+		la $a0, str5
+		ori $v0, $0, 4
+		syscall
+		
+		#DEFINE VARIABLE X
+		ori $s0, $0, 0
+		
+		#DEFINE THE VARIABLE COUNTER
+		ori $s2, $0, 0
+		
+		#LOAD X
+		la $s1, x
+		
+		# i 			-> $s0
+		# x 			-> @s1
+		# count 		-> $s2
+		# occurences 	-> $s3
+	
+Loop2:
+	#READ ARRAY[x]
+	sll $t0, $s0, 2
+	add $t0, $t0, $s1
+	lw  $t0, 0($t0)
+	
+	#CHECK ARRAY[x] == OCCURENCES
+	sub $t1, $t0, $s3
+	bne $t1, 0, goon2
+	nop
+	
+	#PRINT ARRAY[x]
+	addu $a0, $0, $s0
+	ori  $v0, $0, 1
+	syscall
+	
+	#PRINT STRING 5 ENDL
+	la $a0,str5
+	ori $v0, $0, 4
+	syscall
+	
+	#COUNT++
+	addi $s2, $s2, 1
+
+	goon2:
+		#CHECK CONDITION MAKE BRANCH
+		slt $t0, $s0, 9
+		bne $t0, 1 , Done
+		nop
+		addi $s0, $s0, 1
+		j Loop2
+	Done:
+		#PRINT STRING 4
+		la $a0, str4
+		ori $t0, $0, 4
+		syscall
+		
+		#PRINT COUNT
+		addu $a0, $0, $s2
+		ori $v0, $0, 1
+		syscall
+		
+		#EXIT
+		ori $v0, $0,10
+		syscall
+		
+	
+	
+	
+
+
+				

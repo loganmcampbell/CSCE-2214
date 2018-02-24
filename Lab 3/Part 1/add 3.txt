@@ -1,0 +1,30 @@
+.data # variable declarations follow this line
+.text # instructions follow this line
+
+main:
+## Code Part 1: Get first number from user, put into $t0.
+ori $v0, $0, 5 # OUR CODE BEGINS HERE: load syscall read_int into $v0.
+syscall # make the syscall.
+addu $t0, $0, $v0 # move the number read into $t0.
+
+## Get second number from user, put into $t1.
+ori $v0, $0, 5 # load syscall read_int into $v0.
+syscall # make the syscall.
+addu $t1, $0, $v0 # move the number read into $t1.
+
+ori $v0, $0, 5 # OUR CODE BEGINS HERE: load syscall read_int into $v0.
+syscall # make the syscall.
+addu $t3, $0, $v0 # move the number read into $t0.
+
+add $t2, $t0, $t1 # compute the sum.
+
+add $t5, $t2, $t3 # compute the sum of the 2 regs.
+
+
+## Print out $t2.
+addu $a0, $0, $t5 # move the number to print into $a0.
+ori $v0, $0, 1 # load syscall print_int into $v0.
+syscall # make the syscall.
+ori $v0, $0, 10 # syscall code 10 is for exit.
+syscall # make the syscall.
+## end of add2.asm. 

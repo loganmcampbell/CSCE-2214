@@ -1,0 +1,54 @@
+									#DECLARE
+.data								
+	str1:.ascii	"N U M B E R S : "
+	str2:.ascii	"\n"
+	x:.word		18 12 6 500 54 3 2 122
+	
+.text								#INSTRUCTIONS FOLLOW THIS LINE
+
+main:								
+									#(MAIN/STRING ARGS[])
+
+	#PRINT NUMBERS						#"cout << numbers: << endl;"
+	la 	$a0, str1
+	ori	$v0, $0, 4
+	syscall
+
+	#DEFINE VARIABLE X
+	ori $s0, $0, 0
+
+	#LOAD VARIABLE X
+	la $s1, x
+
+Loop:
+	#READ ARRAY[x]
+	sll $t0, $s0, 2
+	add $t0, $t0, $s1
+	lw  $t0, 0($t0)
+
+	#PRINT ARRAY[X]
+	addu $a0, $0, $t0
+	ori  $v0, $0, 1
+	syscall
+
+	#PRINT NEW EMPTY LINE
+	la  $a0, str2
+	ori $v0, $0, 4
+	syscall
+
+	#CHECK THE CONDITION AND MAKE BRANCH
+	slt	$t0, $s0, 7
+	bne $t0, 1, Done
+	nop
+	addi $s0, $s0, 1
+j Loop
+
+
+
+
+Done:
+#EXIT
+	ori	$v0, $0, 10
+	syscall
+
+				
